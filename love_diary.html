@@ -4,7 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>恋爱日记</title>
-    <!-- 链接CSS和JavaScript文件 -->
+    <style>
+        #entries .entry {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            position: relative;
+        }
+        #entries .entry .delete {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -13,7 +27,7 @@
     <main>
         <h1>恋爱日记</h1>
         <form id="diaryForm">
-            <textarea name="entry" placeholder="写下今天的美好回忆..."></textarea>
+            <textarea name="entry" placeholder="写下今天的美好回忆..." required></textarea>
             <button type="submit">保存日记</button>
         </form>
         <div id="entries">
@@ -23,6 +37,29 @@
     <footer>
         <!-- 页脚内容 -->
     </footer>
-    <!-- 这里可以添加JavaScript代码来处理日记的保存和显示 -->
+    <script>
+        document.getElementById('diaryForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var entry = document.querySelector('textarea[name="entry"]').value;
+            var entryDate = new Date().toLocaleString();
+
+            var entryElement = document.createElement('div');
+            entryElement.className = 'entry';
+            entryElement.textContent = entryDate + ': ' + entry;
+
+            var deleteButton = document.createElement('span');
+            deleteButton.className = 'delete';
+            deleteButton.textContent = '删除';
+            deleteButton.onclick = function() {
+                entryElement.remove(); // 删除日记条目
+            };
+
+            entryElement.appendChild(deleteButton);
+            document.getElementById('entries').appendChild(entryElement);
+
+            document.querySelector('textarea[name="entry"]').value = ''; // 清空文本区域
+        });
+    </script>
 </body>
 </html>
