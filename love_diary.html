@@ -38,27 +38,49 @@
         <!-- 页脚内容 -->
     </footer>
     <script>
+        // 从localStorage加载日记条目
+        function loadEntries() {
+            var entries = localStorage.getItem('diaryEntries');
+            if (entries) {
+                document.getElementById('entries').innerHTML = entries;
+            }
+        }
+
+        // 保存日记条目到localStorage
+        function saveEntries() {
+            localStorage.setItem('diaryEntries', document.getElementById('entries').innerHTML);
+        }
+
+        // 删除日记条目并更新localStorage
+        function deleteEntry(entryElement) {
+            entryElement.remove();
+            saveEntries();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadEntries); // 页面加载完成后加载日记
+
         document.getElementById('diaryForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // 阻止表单默认提交行为
+            event.preventDefault();
 
             var entry = document.querySelector('textarea[name="entry"]').value;
             var entryDate = new Date().toLocaleString();
 
             var entryElement = document.createElement('div');
             entryElement.className = 'entry';
-            entryElement.textContent = entryDate + ': ' + entry;
+            entryElement.innerHTML = entryDate + ': ' + entry;
 
             var deleteButton = document.createElement('span');
             deleteButton.className = 'delete';
             deleteButton.textContent = '删除';
             deleteButton.onclick = function() {
-                entryElement.remove(); // 删除日记条目
+                deleteEntry(entryElement);
             };
 
             entryElement.appendChild(deleteButton);
             document.getElementById('entries').appendChild(entryElement);
 
-            document.querySelector('textarea[name="entry"]').value = ''; // 清空文本区域
+            saveEntries(); // 保存到localStorage
+            document.querySelector('textarea[name="entry"]').value = '';
         });
     </script>
 </body>
